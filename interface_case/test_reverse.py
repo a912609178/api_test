@@ -4,6 +4,7 @@ import unittest
 import json
 import time
 import ddt
+from common.confighttp import s
 from common.logger import Logger
 from common.confighttp import ConfigHttp
 from common import base_api
@@ -12,7 +13,7 @@ from common.request_update import Update_all
 
 
 #申明类、公共参数
-sheet_name='main_flow'
+sheet_name='api'
 logger =Logger(logger_name='test_reverse',name=sheet_name).getlog()
 api_xls = base_api.get_xls('test.xlsx', sheet_name)
 update_all = Update_all()
@@ -53,27 +54,30 @@ class TestReverse(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         pass
+
     def setUp(self):
         pass
+
     def tearDown(self):
         pass
-
-
 
 
     @ddt.data(*api_xls)
     @ddt.unpack
     def testReverse(self,id,description,interface,method,headers,data,filename,filepath,associate_id,get_param,set_param,assert_key,message):
         self.setParameters(id,description,interface,method,headers,data,filename,filepath,associate_id,get_param,set_param,assert_key,message)
+
+        if '登陆' in self.description:
+            s.cookies.clear()
+
         if data:
             datas = json.loads(self.data)
-            print(type(datas),'json_data',datas)
         else:
             datas = {}
 
         if self.associate_id != "":
             datas = update_all.update_all(sheet_name, self.associate_id, self.data, self.get_param, self.set_param)
-
+            print('更新后的data',datas)
         api_url = self.interface
         LocalConfigHttp.set_data(datas)
 
@@ -82,14 +86,12 @@ class TestReverse(unittest.TestCase):
         else:
             LocalConfigHttp.set_url(api_url)
 
-
         if self.headers:
             LocalConfigHttp.set_headers2(self.headers)
         else:
             LocalConfigHttp.set_headers()
 
-
-        start_time=time.time()
+        start_time = time.time()
         if self.method == 'post':
             self.response = LocalConfigHttp.post()
         elif self.method == 'get':
@@ -97,9 +99,8 @@ class TestReverse(unittest.TestCase):
         elif self.method == 'post_files':
             self.response = LocalConfigHttp.post_files(self.filename,self.filepath)
         self.content = self.response.json()
-        print(self.content)
-        end_time=time.time()
-        post_time=end_time-start_time
+        end_time = time.time()
+        post_time = end_time-start_time
 
         global assert_value
         assert_value = self.content[self.assert_key]

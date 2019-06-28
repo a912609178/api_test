@@ -1,42 +1,45 @@
-import json
+# -*- coding: utf-8 -*-
+import json,re
 
 
 
 #从一个json中获取某个键的值
 def get_target_value(key, dic, tmp_list):
     """
-    :param key: 目标key值
-    :param dic: JSON数据
+    :param key: get_param 依赖以前的key值
+    :param dic: 从日志中获取到的依赖的case的响应信息 json从这里面去取值
     :param tmp_list: 用于存储获取的数据
     :return: list
     """
 
-    if not isinstance(dic, dict) or not isinstance(tmp_list, list):  # 对传入数据进行格式校验
-        return 'argv[1] not an dict or argv[-1] not an list '
+    if not isinstance(dic, dict) or not isinstance(tmp_list, list):
+        print('argv[1] not an dict or argv[-1] not an list')
+        return None
 
     if key in dic.keys() and dic[key]!=None:
-        tmp_list.append(dic[key])  # 传入数据存在则存入tmp_list
+        tmp_list.append(dic[key])
     else:
-        for value in dic.values():  # 传入数据不符合则对其value值进行遍历
+        for value in dic.values():
             if isinstance(value, dict):
-                get_target_value(key, value, tmp_list)  # 传入数据的value值是字典，则直接调用自身
+                get_target_value(key, value, tmp_list)
             elif isinstance(value, (list, tuple)):
-                _get_value(key, value, tmp_list)  # 传入数据的value值是列表或者元组，则调用_get_value
+                _get_value(key, value, tmp_list)
     return tmp_list
 
 
 def _get_value(key, val, tmp_list):
     for val_ in val:
         if isinstance(val_, dict):
-            get_target_value(key, val_, tmp_list)  # 传入数据的value值是字典，则调用get_target_value
+            get_target_value(key, val_, tmp_list)
         elif isinstance(val_, (list, tuple)):
-            _get_value(key, val_, tmp_list)   # 传入数据的value值是列表或者元组，则调用自身
+            _get_value(key, val_, tmp_list)
 
 if __name__ == "__main__":
-    content ={'handleDto': {}, 'responseCommonDto': {'resvNo': None, 'errorLevel': '0', 'invokerEndTime': 4938829387425979, 'lans': None, 'message': '000000', 'resultCode': '0', 'sessionKey': None, 'token': '6af80826-eba3-4e45-bb32-78b40541fef4', 'tracerId': None, 'userUid': None}, 'resultData': [{'acctNo': ['F0010160'], 'arrDt': None, 'breakFlg': None, 'dptDt': None, 'errorFlg': '0', 'errorRoomNums': None, 'noShareRoomNums': None, 'resvNo': 'R0010134', 'shareAcctNos': None, 'shareFlg': None, 'shareRoomNums': None, 'shareSeq': 'S0010160'}]}
-
-    # data = json.loads(content)
-    # print(data)
-    list1=[]
-    print(get_target_value('resvNo',content,list1))
+    tmplist = []
+    dic = '''{"data":{"pageRecords":[{"accountIsapply":1,"addDetId":"IIAD_020000143147","ass":3,"assignAcco":1,"beginTime":1561910400000,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702610000,"curMthDeclFlag":2,"custSerDepId":"BAOR010000001115","custSerRespId":"BAU010000002321","custSerRespName":"客服系统","declAreaId":"1415688","declAreaName":"阳泉市","empSerDepId":"BAOR010000001116","empSerId":"BAU010000002322","empSerName":"员工系统","execState":2,"insAccoId":"SIA_010000000957","insAccoName":"阳泉市大库","insEmpOrd":{"beginDate":1561910400000,"certNo":"110101199004074153","certType":1,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702610000,"custId":"CI_010000001402","custName":"客户1","declAreaId":"1415688","declAreaName":"阳泉市","empId":"EMP_010000063254","empName":"cs001","entryDate":1561651200000,"execCorpId":"BCORP_010000000801","gender":1,"insEmpOrdId":"IIEO_020000034935","joinIdeId":"","matState":2,"mkupPayFlag":2,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702830000,"ordRecvDepId":"BAOR010000001115","ordRecvId":"SIF_010000001201","ordRecvName":"全国联盟测试组——刘洋","ordRecvRespId":"BAU010000002321","ordRecvRespName":"客服系统","ordSndrId":"SIF_010000001201","ordSndrName":"全国联盟测试组——刘洋","ordState":2,"phone":"18812345678","sendId":"SI_020000039445","source":1,"validFlag":1,"vno":2},"insEmpOrdId":"IIEO_020000034935","insGrpId":"ILP_010000003625","insGrpName":"阳泉社保组合","insMergFlag":2,"matFlag":false,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702830000,"payWage":5000,"payWay":2,"probDets":[],"probFlag":2,"serSetId":"SSS020000200881","submitExecFlag":1,"validFlag":1,"vno":2},{"accountIsapply":1,"addDetId":"IIAD_020000143148","ass":4,"assignAcco":1,"beginTime":1561910400000,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702610000,"curMthDeclFlag":2,"custSerDepId":"BAOR010000001115","custSerRespId":"BAU010000002321","custSerRespName":"客服系统","declAreaId":"1415688","declAreaName":"阳泉市","empSerDepId":"BAOR010000001116","empSerId":"BAU010000002322","empSerName":"员工系统","execState":2,"insAccoId":"SIA_010000000957","insAccoName":"阳泉市大库","insEmpOrd":{"beginDate":1561910400000,"certNo":"110101199004074153","certType":1,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702610000,"custId":"CI_010000001402","custName":"客户1","declAreaId":"1415688","declAreaName":"阳泉市","empId":"EMP_010000063254","empName":"cs001","entryDate":1561651200000,"execCorpId":"BCORP_010000000801","gender":1,"insEmpOrdId":"IIEO_020000034935","joinIdeId":"","matState":2,"mkupPayFlag":2,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702830000,"ordRecvDepId":"BAOR010000001115","ordRecvId":"SIF_010000001201","ordRecvName":"全国联盟测试组——刘洋","ordRecvRespId":"BAU010000002321","ordRecvRespName":"客服系统","ordSndrId":"SIF_010000001201","ordSndrName":"全国联盟测试组——刘洋","ordState":2,"phone":"18812345678","sendId":"SI_020000039445","source":1,"validFlag":1,"vno":2},"insEmpOrdId":"IIEO_020000034935","insGrpId":"ILP_010000003625","insGrpName":"阳泉社保组合","insMergFlag":2,"matFlag":false,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702830000,"payWage":5000,"payWay":2,"probDets":[],"probFlag":2,"serSetId":"SSS020000200882","submitExecFlag":1,"validFlag":1,"vno":2},{"accountIsapply":1,"addDetId":"IIAD_020000143149","ass":5,"assignAcco":1,"beginTime":1561910400000,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702611000,"curMthDeclFlag":2,"custSerDepId":"BAOR010000001115","custSerRespId":"BAU010000002321","custSerRespName":"客服系统","declAreaId":"1415688","declAreaName":"阳泉市","empSerDepId":"BAOR010000001116","empSerId":"BAU010000002322","empSerName":"员工系统","execState":2,"insAccoId":"SIA_010000000957","insAccoName":"阳泉市大库","insEmpOrd":{"beginDate":1561910400000,"certNo":"110101199004074153","certType":1,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702611000,"custId":"CI_010000001402","custName":"客户1","declAreaId":"1415688","declAreaName":"阳泉市","empId":"EMP_010000063254","empName":"cs001","entryDate":1561651200000,"execCorpId":"BCORP_010000000801","gender":1,"insEmpOrdId":"IIEO_020000034935","joinIdeId":"","matState":2,"mkupPayFlag":2,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"ordRecvDepId":"BAOR010000001115","ordRecvId":"SIF_010000001201","ordRecvName":"全国联盟测试组——刘洋","ordRecvRespId":"BAU010000002321","ordRecvRespName":"客服系统","ordSndrId":"SIF_010000001201","ordSndrName":"全国联盟测试组——刘洋","ordState":2,"phone":"18812345678","sendId":"SI_020000039445","source":1,"validFlag":1,"vno":2},"insEmpOrdId":"IIEO_020000034935","insGrpId":"ILP_010000003625","insGrpName":"阳泉社保组合","insMergFlag":2,"matFlag":false,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"payWage":5000,"payWay":2,"probDets":[],"probFlag":2,"serSetId":"SSS020000200883","submitExecFlag":1,"validFlag":1,"vno":2},{"accountIsapply":1,"addDetId":"IIAD_020000143150","ass":6,"assignAcco":1,"beginTime":1561910400000,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702611000,"curMthDeclFlag":2,"custSerDepId":"BAOR010000001115","custSerRespId":"BAU010000002321","custSerRespName":"客服系统","declAreaId":"1415688","declAreaName":"阳泉市","empSerDepId":"BAOR010000001116","empSerId":"BAU010000002322","empSerName":"员工系统","execState":2,"insAccoId":"SIA_010000000957","insAccoName":"阳泉市大库","insEmpOrd":{"beginDate":1561910400000,"certNo":"110101199004074153","certType":1,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702611000,"custId":"CI_010000001402","custName":"客户1","declAreaId":"1415688","declAreaName":"阳泉市","empId":"EMP_010000063254","empName":"cs001","entryDate":1561651200000,"execCorpId":"BCORP_010000000801","gender":1,"insEmpOrdId":"IIEO_020000034935","joinIdeId":"","matState":2,"mkupPayFlag":2,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"ordRecvDepId":"BAOR010000001115","ordRecvId":"SIF_010000001201","ordRecvName":"全国联盟测试组——刘洋","ordRecvRespId":"BAU010000002321","ordRecvRespName":"客服系统","ordSndrId":"SIF_010000001201","ordSndrName":"全国联盟测试组——刘洋","ordState":2,"phone":"18812345678","sendId":"SI_020000039445","source":1,"validFlag":1,"vno":2},"insEmpOrdId":"IIEO_020000034935","insGrpId":"ILP_010000003625","insGrpName":"阳泉社保组合","insMergFlag":2,"matFlag":false,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"payWage":5000,"payWay":2,"probDets":[],"probFlag":2,"serSetId":"SSS020000200884","submitExecFlag":1,"validFlag":1,"vno":2},{"accountIsapply":1,"addDetId":"IIAD_020000143151","ass":7,"assignAcco":1,"beginTime":1561910400000,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702612000,"curMthDeclFlag":2,"custSerDepId":"BAOR010000001115","custSerRespId":"BAU010000002321","custSerRespName":"客服系统","declAreaId":"1415688","declAreaName":"阳泉市","empSerDepId":"BAOR010000001116","empSerId":"BAU010000002322","empSerName":"员工系统","execState":2,"insAccoId":"SIA_010000000957","insAccoName":"阳泉市大库","insEmpOrd":{"beginDate":1561910400000,"certNo":"110101199004074153","certType":1,"corpId":"BCORP_010000000801","corpName":"全国联盟测试组——刘洋","creDepId":"BAOR010000001115","creDepName":"客服系统","creId":"BAU010000002321","creName":"客服系统","creTime":1561702612000,"custId":"CI_010000001402","custName":"客户1","declAreaId":"1415688","declAreaName":"阳泉市","empId":"EMP_010000063254","empName":"cs001","entryDate":1561651200000,"execCorpId":"BCORP_010000000801","gender":1,"insEmpOrdId":"IIEO_020000034935","joinIdeId":"","matState":2,"mkupPayFlag":2,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"ordRecvDepId":"BAOR010000001115","ordRecvId":"SIF_010000001201","ordRecvName":"全国联盟测试组——刘洋","ordRecvRespId":"BAU010000002321","ordRecvRespName":"客服系统","ordSndrId":"SIF_010000001201","ordSndrName":"全国联盟测试组——刘洋","ordState":2,"phone":"18812345678","sendId":"SI_020000039445","source":1,"validFlag":1,"vno":2},"insEmpOrdId":"IIEO_020000034935","insGrpId":"ILP_010000003625","insGrpName":"阳泉社保组合","insMergFlag":2,"matFlag":false,"operDepId":"BAOR010000001116","operDepName":"员工系统","operId":"BAU010000002322","operName":"员工系统","operTime":1561702831000,"payWage":5000,"payWay":2,"probDets":[],"probFlag":2,"serSetId":"SSS020000200885","submitExecFlag":1,"validFlag":1,"vno":2}],"totalCount":5},"success":true,"traceId":"86c12d4e7bae421db6e0139d0c6351bf"}'''
+    dic = re.sub('false','"false"',dic)
+    dic = re.sub('true','"true"',dic)
+    dic = json.loads(dic)
+    a = get_target_value(key='addDetId', dic=dic, tmp_list=tmplist)
+    print(a)
 

@@ -42,7 +42,6 @@ class ConfigHttp:
 
     def set_data(self, data):
         self.data = data
-        print(self.data,'设置data后的返回值')
         return self.data
 
     def set_json(self, json):

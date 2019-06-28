@@ -17,13 +17,8 @@ def get_xls(xls_name,sheet_name):
 
 
 if __name__ == '__main__':
-    api_xls = get_xls('test.xlsx', 'main_flow')
-    print(type(api_xls[6][5]),'---','原字符串',api_xls[6][5])
-    str_data = str(api_xls[6][5])
-    print(type(str_data),'str',str_data)
-    datas = json.loads(str_data)
-    print(type(datas),'json',datas)
-
+    api_xls = get_xls('test.xlsx', 'api')
+    print(str(api_xls[3][8]).split(','))
 
 
 
