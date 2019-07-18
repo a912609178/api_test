@@ -11,6 +11,5 @@ CASE_PATH = os.path.join(BASE_PATH,'case')
 LOG_PATH = os.path.join(BASE_PATH,'logs')
 PAGE_PATH = os.path.join(BASE_PATH,'pages')
 REPORT_PATH = os.path.join(BASE_PATH,'reports')
-SCREENSHOT_PATH = os.path.join(BASE_PATH,'screenshots')
 INTERFACE_CASE_PATH = os.path.join(BASE_PATH,'interface_case')
 

@@ -17,10 +17,13 @@ def get_xls(xls_name,sheet_name):
 
 
 if __name__ == '__main__':
-    api_xls = get_xls('test.xlsx', 'api')
-    print(str(api_xls[3][8]).split(','))
-
-
-
-
+    from common.get_Id_card import get_card_id
+    api_xls = get_xls('test.xlsx', 'api1')
+    a = str((api_xls[3][5]))
+    datas = json.loads(a)
+    print('a',datas)
+    ss = get_card_id()
+    datas['requestAddBaseDto']['idCode'] = ss
+    datas['requestAddBaseDto']['empName'] = 'duoduo'+ss[-4:]
+    print('b',datas)
 

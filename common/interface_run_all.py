@@ -15,7 +15,7 @@ if __name__ == "__main__":
     report = os.path.join(REPORT_PATH,report_time+'zhonghui_report.html')
 
     with open(report, 'wb') as f:
-        runner = HTMLTestRunner(f, verbosity=2, title='众荟接口测试', description='众荟接口测试')
+        runner = HTMLTestRunner(f, verbosity=2, title='外企科技接口测试', description='全国共享平台自动化测试')
         runner.run(all_case())
 
     e = Email()

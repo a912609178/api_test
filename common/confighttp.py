@@ -1,4 +1,4 @@
-import requests
+import requests,json
 from urllib3 import encode_multipart_formdata
 from common.readconfig import ReadConfig
 
@@ -69,18 +69,13 @@ class ConfigHttp:
 
     def post_files(self,filename,filepath):
         header = {}
-        data = self.data
+        data = eval(self.data)
         data['file'] = (filename, open(filepath, 'rb').read())
         encode_data = encode_multipart_formdata(data)
         data = encode_data[0]
-        print('编码后的data',data)
         header['Content-Type'] = encode_data[1]
         try:
             response = s.post(url=self.url, headers=header, data=data)
             return response
         except TimeoutError:
             self.logger.error('TIME OUT %s .'%self.url)
-
-
-
-
